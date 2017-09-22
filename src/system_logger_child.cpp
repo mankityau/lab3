@@ -36,7 +36,7 @@ void run_logger(const std::string& processname,
 
 int main(int argc, char* argv[]) {
 
-  if (argc < 2) {
+  if (argc < 4) {
     std::cout << " Error: need to pass in a process name, logfile, and number of messages" << std::endl;
     return -1;
   }
