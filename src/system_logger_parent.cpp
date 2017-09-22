@@ -34,4 +34,7 @@ int main() {
   // unlink mutex since we and all child processes are done with it
   mutex.unlink();
 
+  // pause, waiting for keyboard input
+  cpen333::pause();
+  return 0;
 }
