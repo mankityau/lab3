@@ -36,7 +36,7 @@ class UnitTestException : public std::exception {
 };
 
 /**
- * Tests count_words for the given line and starting index
+ * Tests word_count for the given line and starting index
  * @param line line in which to search for words
  * @param start_idx starting index in line to search for words
  * @param expected expected answer
