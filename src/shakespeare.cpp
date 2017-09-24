@@ -174,4 +174,8 @@ int main() {
     std::cout << entry.first << ", " << entry.second << std::endl;
   }
 
+  std::cout << std::endl << "Press ENTER to continue..." << std::endl;
+  std::cin.get();
+
+  return 0;
 }

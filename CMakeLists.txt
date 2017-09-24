@@ -44,12 +44,8 @@ if(UNIX AND NOT APPLE)
     target_link_libraries(system_logger_parent rt)
 endif()
 
-# set output and working directories
-set_target_properties(system_logger_child PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin")
-set_target_properties(system_logger_parent PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin")
+# set working directories
 if (${CMAKE_VERSION} VERSION_GREATER "3.8.0" OR ${CMAKE_VERSION} VERSION_EQUAL "3.8.0")
     set_target_properties(system_logger_parent PROPERTIES
-            VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bin/\$(Configuration)")
+            VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/$(Configuration)")
 endif()
