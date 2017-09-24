@@ -163,9 +163,9 @@ int main() {
       "data/shakespeare_romeo_and_juliet.txt",
   };
 
-  //============================================================
-  // YOUR IMPLEMENTATION HERE TO COUNT WORDS IN MULTPLE THREADS
-  //============================================================
+  //=============================================================
+  // YOUR IMPLEMENTATION HERE TO COUNT WORDS IN MULTIPLE THREADS
+  //=============================================================
 
   auto sorted_wcounts = sort_characters_by_wordcount(wcounts);
 
