@@ -151,7 +151,7 @@ int main() {
   std::map<std::string,int> wcounts;
 
   std::vector<std::string> filenames = {
-      "data/shakespeare_anotony_cleopatra.txt",
+      "data/shakespeare_antony_cleopatra.txt",
       "data/shakespeare_hamlet.txt",
       "data/shakespeare_julius_caesar.txt",
       "data/shakespeare_king_lear.txt",
