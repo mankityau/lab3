@@ -19,7 +19,7 @@ int main() {
     //=================================================
     //  RUN CHILD PROCESSES (system_logger_child)
     //      Process arguments:
-    //          - a name for identification in the lag
+    //          - a name for identification in the log
     //          - a log filename to append to
     //          - a number of messages to append
     //=================================================
