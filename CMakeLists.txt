@@ -20,12 +20,12 @@ target_link_libraries(shakespeare Threads::Threads)
 # copy data files
 FILE(COPY data DESTINATION "${CMAKE_BINARY_DIR}")
 
+# add library directory
+include_directories(../library/include)
+
 #===================================================
 #  System Logger
 #===================================================
-
-# add library directory
-include_directories(../library/include)
 
 # child
 add_executable(system_logger_child src/system_logger_child.cpp)

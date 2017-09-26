@@ -23,6 +23,9 @@ int main() {
     //          - a log filename to append to
     //          - a number of messages to append
     //=================================================
+    cmd.push_back("./system_logger_child");  // command path
+    // other arguments...
+    // cmd.push_back(...);
 
   }
 
