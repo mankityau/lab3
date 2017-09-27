@@ -9,6 +9,6 @@
  * @param start_idx starting index to search for words
  * @return number of words in the line
  */
-int word_count(const std::string& line, int start_idx);
+int word_count(const std::string &line, int start_idx);
 
 #endif //LAB3_WORD_COUNT_H

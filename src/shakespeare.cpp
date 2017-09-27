@@ -27,38 +27,38 @@
  * @return index of start of dialogue if a dialogue line,
  *      -1 if not a dialogue line
  */
-int is_dialogue_line(const std::string& line, std::string& character) {
+int is_dialogue_line(const std::string &line, std::string &character) {
 
-  // new character
-  if (line.length() >= 3 && line[0] == ' '
-      && line[1] == ' ' && line[2] != ' ') {
-    // extract character name
+    // new character
+    if (line.length() >= 3 && line[0] == ' '
+        && line[1] == ' ' && line[2] != ' ') {
+        // extract character name
 
-    int start_idx = 2;
-    int end_idx = 3;
-    while (end_idx <= line.length() && line[end_idx-1] != '.') {
-      ++end_idx;
+        int start_idx = 2;
+        int end_idx = 3;
+        while (end_idx <= line.length() && line[end_idx - 1] != '.') {
+            ++end_idx;
+        }
+
+        // no name found
+        if (end_idx >= line.length()) {
+            return 0;
+        }
+
+        // extract character's name
+        character = line.substr(start_idx, end_idx - start_idx - 1);
+        return end_idx;
     }
 
-    // no name found
-    if (end_idx >= line.length()) {
-      return 0;
+    // previous character
+    if (line.length() >= 5 && line[0] == ' '
+        && line[1] == ' ' && line[2] == ' '
+        && line[3] == ' ' && line[4] != ' ') {
+        // continuation
+        return 4;
     }
 
-    // extract character's name
-    character = line.substr(start_idx, end_idx-start_idx-1);
-    return end_idx;
-  }
-
-  // previous character
-  if (line.length() >= 5 && line[0] == ' '
-      && line[1] == ' ' && line[2] == ' '
-      && line[3] == ' ' && line[4] != ' ') {
-    // continuation
-    return 4;
-  }
-
-  return 0;
+    return 0;
 }
 
 /**
@@ -68,43 +68,43 @@ int is_dialogue_line(const std::string& line, std::string& character) {
  * @param mutex mutex for protected access to the shared wcounts map
  * @param wcounts a shared map from character -> word count
  */
-void count_character_words(const std::string& filename,
-                           std::mutex& mutex,
-                           std::map<std::string,int>& wcounts) {
+void count_character_words(const std::string &filename,
+                           std::mutex &mutex,
+                           std::map<std::string, int> &wcounts) {
 
-  //===============================================
-  //  IMPLEMENT THREAD SAFETY IN THIS METHOD
-  //===============================================
+    //===============================================
+    //  IMPLEMENT THREAD SAFETY IN THIS METHOD
+    //===============================================
 
-  std::string line;  // for storing each line read from the file
-  std::ifstream file (filename);
+    std::string line;  // for storing each line read from the file
+    std::ifstream file(filename);
 
-  // read contents of file if open
-  if (file.is_open()) {
+    // read contents of file if open
+    if (file.is_open()) {
 
-    std::string character = "";  // empty character to start
+        std::string character = "";  // empty character to start
 
-    // line by line
-    while ( std::getline (file,line) ) {
+        // line by line
+        while (std::getline(file, line)) {
 
-      int idx = is_dialogue_line(line, character);
-      if (idx > 0 && !character.empty()) {
+            int idx = is_dialogue_line(line, character);
+            if (idx > 0 && !character.empty()) {
 
-        int nwords = word_count(line, idx);
+                int nwords = word_count(line, idx);
 
-        // add character if doesn't exist, otherwise increment count
+                // add character if doesn't exist, otherwise increment count
 
-        //=================================================
-        // YOUR JOB TO ADD WORD COUNT INFORMATION TO MAP
-        //=================================================
+                //=================================================
+                // YOUR JOB TO ADD WORD COUNT INFORMATION TO MAP
+                //=================================================
 
-      } else {
-        character = "";  // reset character
-      }
+            } else {
+                character = "";  // reset character
+            }
 
+        }
+        file.close();  // close file
     }
-    file.close();  // close file
-  }
 
 }
 
@@ -114,13 +114,13 @@ void count_character_words(const std::string& filename,
  * @param p2 second pair
  * @return true if p1 should come before p2, false otherwise
  */
-bool wc_greater_than(std::pair<std::string,int>& p1, std::pair<std::string,int>& p2) {
+bool wc_greater_than(std::pair<std::string, int> &p1, std::pair<std::string, int> &p2) {
 
-  //===============================================
-  // YOUR IMPLEMENTATION HERE TO ORDER p1 AND p2
-  //===============================================
+    //===============================================
+    // YOUR IMPLEMENTATION HERE TO ORDER p1 AND p2
+    //===============================================
 
-  return false;
+    return false;
 };
 
 /**
@@ -129,53 +129,53 @@ bool wc_greater_than(std::pair<std::string,int>& p1, std::pair<std::string,int>&
  * @param wcounts a map of character -> word count
  * @return sorted vector of {character, word count} pairs
  */
-std::vector<std::pair<std::string,int>> sort_characters_by_wordcount(
-    const std::map<std::string,int>& wcounts) {
+std::vector<std::pair<std::string, int>> sort_characters_by_wordcount(
+        const std::map<std::string, int> &wcounts) {
 
-  std::vector<std::pair<std::string,int>> out;
-  out.reserve(wcounts.size());   // reserve memory for efficiency
+    std::vector<std::pair<std::string, int>> out;
+    out.reserve(wcounts.size());   // reserve memory for efficiency
 
-  // sort characters by words descending
-  for (const auto& pair : wcounts) {
-    out.push_back(pair);
-  }
-  std::sort(out.begin(), out.end(), wc_greater_than);
+    // sort characters by words descending
+    for (const auto &pair : wcounts) {
+        out.push_back(pair);
+    }
+    std::sort(out.begin(), out.end(), wc_greater_than);
 
-  return out;
+    return out;
 }
 
 int main() {
 
-  // map and mutex for thread safety
-  std::mutex mutex;
-  std::map<std::string,int> wcounts;
+    // map and mutex for thread safety
+    std::mutex mutex;
+    std::map<std::string, int> wcounts;
 
-  std::vector<std::string> filenames = {
-      "data/shakespeare_antony_cleopatra.txt",
-      "data/shakespeare_hamlet.txt",
-      "data/shakespeare_julius_caesar.txt",
-      "data/shakespeare_king_lear.txt",
-      "data/shakespeare_macbeth.txt",
-      "data/shakespeare_merchant_of_venice.txt",
-      "data/shakespeare_midsummer_nights_dream.txt",
-      "data/shakespeare_much_ado.txt",
-      "data/shakespeare_othello.txt",
-      "data/shakespeare_romeo_and_juliet.txt",
-  };
+    std::vector<std::string> filenames = {
+            "data/shakespeare_antony_cleopatra.txt",
+            "data/shakespeare_hamlet.txt",
+            "data/shakespeare_julius_caesar.txt",
+            "data/shakespeare_king_lear.txt",
+            "data/shakespeare_macbeth.txt",
+            "data/shakespeare_merchant_of_venice.txt",
+            "data/shakespeare_midsummer_nights_dream.txt",
+            "data/shakespeare_much_ado.txt",
+            "data/shakespeare_othello.txt",
+            "data/shakespeare_romeo_and_juliet.txt",
+    };
 
-  //=============================================================
-  // YOUR IMPLEMENTATION HERE TO COUNT WORDS IN MULTIPLE THREADS
-  //=============================================================
+    //=============================================================
+    // YOUR IMPLEMENTATION HERE TO COUNT WORDS IN MULTIPLE THREADS
+    //=============================================================
 
-  auto sorted_wcounts = sort_characters_by_wordcount(wcounts);
+    auto sorted_wcounts = sort_characters_by_wordcount(wcounts);
 
-  // results
-  for (const auto& entry : sorted_wcounts) {
-    std::cout << entry.first << ", " << entry.second << std::endl;
-  }
+    // results
+    for (const auto &entry : sorted_wcounts) {
+        std::cout << entry.first << ", " << entry.second << std::endl;
+    }
 
-  std::cout << std::endl << "Press ENTER to continue..." << std::endl;
-  std::cin.get();
+    std::cout << std::endl << "Press ENTER to continue..." << std::endl;
+    std::cin.get();
 
-  return 0;
+    return 0;
 }
