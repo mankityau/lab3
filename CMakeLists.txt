@@ -8,13 +8,13 @@ find_package( Threads REQUIRED )  # Multithreading package required
 # Word count and tests
 #===================================================
 
-add_executable(word_count_test src/word_count_test.cpp src/word_count.cpp)
+add_executable(word_count_test src/word_count_test.cpp src/wordCount.cpp)
 
 #===================================================
 #  Shakespeare
 #===================================================
 
-add_executable(shakespeare src/shakespeare.cpp src/word_count.cpp)
+add_executable(shakespeare src/shakespeare.cpp src/wordCount.cpp)
 target_link_libraries(shakespeare Threads::Threads)
 
 # copy data files

@@ -1,4 +1,4 @@
-#include "word_count.h"
+#include "wordCount.h"
 #include <exception>
 #include <iostream>
 
@@ -44,7 +44,7 @@ public:
  */
 void wc_tester(const std::string &line, int start_idx, int expected) {
 
-    int result = word_count(line, start_idx);
+    int result = wordCount::wordCount(line, start_idx);
 
     // if not what we expect, throw an error
     if (result != expected) {

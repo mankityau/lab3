@@ -7,7 +7,7 @@
 #include <vector>
 #include <thread>
 
-#include "word_count.h"
+#include "wordCount.h"
 
 /**
  * Checks if the line specifies a character's dialogue, returning
