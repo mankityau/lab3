@@ -90,13 +90,16 @@ void count_character_words(const std::string &filename,
             int idx = is_dialogue_line(line, character);
             if (idx > 0 && !character.empty()) {
 
-                int nwords = word_count(line, idx);
+                int nwords = wordCount::wordCount(line, idx);
+                {
+                    std::lock_guard<std::mutex> wcountLock(mutex);
+                    if (wcounts.find(character) == wcounts.end()) {
+                        wcounts.insert({character, nwords});
+                    } else {
+                        wcounts[character] += nwords;
+                    }
+                }
 
-                // add character if doesn't exist, otherwise increment count
-
-                //=================================================
-                // YOUR JOB TO ADD WORD COUNT INFORMATION TO MAP
-                //=================================================
 
             } else {
                 character = "";  // reset character
@@ -109,19 +112,44 @@ void count_character_words(const std::string &filename,
 }
 
 /**
+ * Comparator, order by alphabet, then by length.
+ * Example
+ *  s1 = aa, s2 = ab, return true
+ *  s1 = ab, s2 = aa, return false
+ *  s1 = aa, s2 = aaa, return true
+ *  s1 = aaa, s2 = aa, return false
+ *  @pre s1, and s2 must be different
+ * @param s1
+ * @param s2
+ * @return
+ */
+bool nameGreaterThan(const std::string &s1, const std::string &s2) {
+    for (int idx = 0; idx < s1.length() && idx < s2.length(); ++idx) {
+        if (s1.at(idx) < s2.at(idx)) {
+            return true;
+        } else if (s2.at(idx) < s1.at(idx)) {
+            return false;
+        }
+    }
+    return (s1.length() < s2.length());
+}
+
+/**
  * Comparator, orders by number decreasing, then by name
  * @param p1 first pair
  * @param p2 second pair
  * @return true if p1 should come before p2, false otherwise
  */
 bool wc_greater_than(std::pair<std::string, int> &p1, std::pair<std::string, int> &p2) {
-
-    //===============================================
-    // YOUR IMPLEMENTATION HERE TO ORDER p1 AND p2
-    //===============================================
-
-    return false;
+    if (p1.second > p2.second) {
+        return true;
+    } else if (p1.second == p2.second) {
+        return nameGreaterThan(p1.first, p2.first);
+    } else {
+        return false;
+    }
 };
+
 
 /**
  * Sorts characters in descending order by word count
@@ -163,15 +191,21 @@ int main() {
             "data/shakespeare_romeo_and_juliet.txt",
     };
 
-    //=============================================================
-    // YOUR IMPLEMENTATION HERE TO COUNT WORDS IN MULTIPLE THREADS
-    //=============================================================
+    std::vector<std::thread> threads;
+
+    for (std::vector<std::string>::iterator filenameIterator = filenames.begin(); filenameIterator != filenames.end(); filenameIterator ++) {
+        threads.push_back(std::thread(count_character_words, *filenameIterator, std::ref(mutex), std::ref(wcounts)));
+    }
+
+    for (std::vector<std::thread>::iterator threadIt = threads.begin(); threadIt != threads.end(); ++threadIt) {
+        threadIt->join();
+    }
 
     auto sorted_wcounts = sort_characters_by_wordcount(wcounts);
 
     // results
     for (const auto &entry : sorted_wcounts) {
-        std::cout << entry.first << ", " << entry.second << std::endl;
+        std::cout << entry.first << "\t" << entry.second << std::endl;
     }
 
     std::cout << std::endl << "Press ENTER to continue..." << std::endl;
