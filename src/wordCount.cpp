@@ -11,7 +11,7 @@ namespace wordCount {
             return 0;
         }
 
-        int nwords = ((line.at(0) == ' ') ? 0 : 1);
+        int nwords = ((line.at(start_idx) == ' ') ? 0 : 1);
 
         for (std::string::const_iterator it = line.begin() + start_idx + 1; it < line.end(); it++){
             if (startNewWord(it)){

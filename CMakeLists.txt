@@ -49,3 +49,8 @@ if (${CMAKE_VERSION} VERSION_GREATER "3.8.0" OR ${CMAKE_VERSION} VERSION_EQUAL "
     set_target_properties(system_logger_parent PROPERTIES
             VS_DEBUGGER_WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/$(Configuration)")
 endif()
+
+include_directories(src)
+
+add_subdirectory(src)
+add_subdirectory(test)
